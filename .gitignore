@@ -1,0 +1,8 @@
+# Raw course video transcripts — copyrighted course material, kept local only
+subtitle*.txt
+
+# Per-lecture markdown notes — kept local only
+lectures/
+
+# Personal working files
+linkedin-post.md

@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SQL Course Cheatsheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Design plan
+   Subject : cheatsheet for the IBM course "Databases & SQL for
+             Data Science with Python" — 29 lectures + cheat card
+   Palette : IBM-blue accent on cool neutrals; code panels styled
+             as terminals (dark in both themes)
+   Type    : IBM Plex Mono (display, eyebrows, code) + IBM Plex Sans (body)
+   Layout  : sticky header; sidebar tab rail grouped by module on
+             desktop, horizontal chip row on phones; one visible
+             panel at a time; reading column ≈65ch
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --bg:#f5f7fa; --bg2:#ecf0f5; --surface:#ffffff;
+  --ink:#182030; --muted:#5c6b7d; --line:#d9e0e8;
+  --accent:#0f62fe; --accent-soft:#e8f0fe; --accent-ink:#0043ce;
+  --good:#0e8345; --warn:#a2560a; --warn-soft:#fdf4e7;
+  --code-bg:#0e1526; --code-line:#233047; --code-tx:#dbe2f0;
+  --shadow:0 1px 2px rgba(24,32,48,.06),0 4px 14px rgba(24,32,48,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11151d; --bg2:#161b25; --surface:#1a212c;
+  --ink:#e3e9f2; --muted:#96a3b4; --line:#2a3240;
+  --accent:#78a9ff; --accent-soft:#1b2a45; --accent-ink:#78a9ff;
+  --good:#42be65; --warn:#f1c21b; --warn-soft:#2a2313;
+  --code-bg:#0b101d; --code-line:#1d2740; --code-tx:#dbe2f0;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#11151d; --bg2:#161b25; --surface:#1a212c;
+  --ink:#e3e9f2; --muted:#96a3b4; --line:#2a3240;
+  --accent:#78a9ff; --accent-soft:#1b2a45; --accent-ink:#78a9ff;
+  --good:#42be65; --warn:#f1c21b; --warn-soft:#2a2313;
+  --code-bg:#0b101d; --code-line:#1d2740; --code-tx:#dbe2f0;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 15.5px/1.6 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+header.top{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:14px;
+  padding:10px max(16px, env(safe-area-inset-left,0px)); padding-top:calc(10px + env(safe-area-inset-top,0px));
+  background:var(--bg); border-bottom:1px solid var(--line);
+}
+.mark{
+  font:600 13px/1 "IBM Plex Mono", ui-monospace, monospace;
+  color:var(--accent-ink); background:var(--accent-soft);
+  border:1px solid var(--accent); border-radius:4px; padding:8px 9px; letter-spacing:.5px;
+}
+.brand{font-weight:600; font-size:15.5px; letter-spacing:.2px; white-space:nowrap}
+.brand small{display:block; font:400 11px/1.4 "IBM Plex Mono", monospace; color:var(--muted); letter-spacing:.4px}
+.top .spacer{flex:1}
+#themeBtn{
+  font:500 12px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing:.4px; color:var(--muted);
+  background:transparent; border:1px solid var(--line); border-radius:6px; padding:8px 10px; cursor:pointer;
+}
+#themeBtn:hover{color:var(--ink); border-color:var(--muted)}
+#themeBtn:focus-visible,.tab:focus-visible,#search:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* search */
+.searchwrap{padding:12px max(16px, env(safe-area-inset-left,0px)) 10px; background:var(--bg)}
+#search{
+  width:100%; max-width:720px; display:block;
+  font:400 14px/1.4 "IBM Plex Mono", ui-monospace, monospace; color:var(--ink);
+  background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 14px;
+}
+#search::placeholder{color:var(--muted)}
+.searchmeta{font:400 11.5px/1.4 "IBM Plex Mono", ui-monospace, monospace; color:var(--muted); margin-top:6px; min-height:15px}
+
+/* shell */
+.shell{display:grid; grid-template-columns:262px minmax(0,1fr); align-items:start}
+nav.tabs{
+  position:sticky; top:58px; max-height:calc(100vh - 58px); overflow-y:auto;
+  padding:14px 12px 40px; border-right:1px solid var(--line); background:var(--bg);
+}
+.group{font:600 10.5px/1 "IBM Plex Mono", ui-monospace, monospace; color:var(--muted);
+  letter-spacing:1.2px; text-transform:uppercase; margin:18px 8px 8px;}
+.group:first-child{margin-top:2px}
+.tab{
+  display:flex; gap:8px; align-items:baseline; width:100%; text-align:left;
+  font:400 13.5px/1.35 "IBM Plex Sans", sans-serif; color:var(--ink);
+  background:transparent; border:0; border-radius:7px; padding:7px 9px; margin:1px 0; cursor:pointer;
+}
+.tab .no{font:400 11px/1.5 "IBM Plex Mono", ui-monospace, monospace; color:var(--muted); flex:0 0 auto}
+.tab:hover{background:var(--bg2)}
+.tab.on{background:var(--accent-soft); color:var(--accent-ink); font-weight:500}
+.tab.on .no{color:var(--accent-ink)}
+.tab.star{font-weight:500}
+.tab[hidden]{display:none}
+
+main{padding:26px 34px 80px; background:var(--bg); min-width:0}
+
+/* panels */
+.panel{display:none; max-width:70ch}
+.panel.show{display:block; animation:fade .18s ease-out}
+@keyframes fade{from{opacity:0; transform:translateY(3px)} to{opacity:1; transform:none}}
+.eyebrow{font:600 11px/1.4 "IBM Plex Mono", ui-monospace, monospace; color:var(--accent-ink);
+  letter-spacing:1px; text-transform:uppercase; margin:0 0 6px}
+.panel h2{font-size:26px; line-height:1.25; font-weight:600; letter-spacing:-.2px; margin:0 0 12px; text-wrap:balance}
+.lead{color:var(--muted); font-size:16px; margin:0 0 10px}
+.block{margin:26px 0 0}
+.block h3{font:600 12px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing:1.1px;
+  text-transform:uppercase; color:var(--muted); margin:0 0 10px; padding-bottom:7px; border-bottom:1px solid var(--line)}
+.block p{margin:0 0 10px}
+.block ul{margin:0; padding-left:1.15em; display:grid; gap:7px}
+.block li{padding-left:2px}
+.b{font-variant-numeric:tabular-nums}
+
+/* code — terminal panels, dark in both themes */
+.codewrap{overflow-x:auto; background:var(--code-bg); border:1px solid var(--code-line); border-radius:8px}
+.codewrap .bar{display:flex; align-items:center; justify-content:space-between;
+  padding:6px 12px; border-bottom:1px solid var(--code-line)}
+.codewrap .bar span{font:400 10.5px/1 "IBM Plex Mono", ui-monospace, monospace; color:#5f7396; letter-spacing:.8px; text-transform:uppercase}
+.code{margin:0; padding:13px 16px; overflow-x:auto;
+  font:400 13px/1.65 "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color:var(--code-tx); white-space:pre}
+.code .kw{color:#82a7ff; font-weight:600}
+.code .st{color:#8be28f}
+.code .cm{color:#5f7396; font-style:italic}
+.code .fn{color:#f0c98d}
+.inline{font:400 .86em/1.4 "IBM Plex Mono", ui-monospace, monospace;
+  background:var(--bg2); border:1px solid var(--line); border-radius:4px; padding:1px 5px; white-space:nowrap}
+
+/* notes, chips, tables */
+.note{margin-top:20px; border-left:3px solid var(--warn); background:var(--warn-soft);
+  border-radius:0 8px 8px 0; padding:12px 16px}
+.note b{display:block; font:600 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing:1px;
+  text-transform:uppercase; color:var(--warn); margin-bottom:5px}
+.note p{margin:0; font-size:14px}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+.chip{font:500 12px/1.5 "IBM Plex Mono", ui-monospace, monospace; color:var(--accent-ink);
+  background:var(--accent-soft); border:1px solid var(--line); border-radius:5px; padding:4px 9px}
+table{border-collapse:collapse; width:100%; font-size:13.5px}
+th,td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font:600 11px/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing:.8px; text-transform:uppercase; color:var(--muted)}
+td code{font:400 .88em/1.4 "IBM Plex Mono", ui-monospace, monospace}
+.tblwrap{overflow-x:auto}
+
+/* cheat-card grid */
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+.grid2 .block{margin-top:0}
+
+/* responsive */
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  nav.tabs{position:static; max-height:none; display:flex; gap:8px; overflow-x:auto;
+    padding:10px 14px; border-right:0; border-bottom:1px solid var(--line); -webkit-overflow-scrolling:touch}
+  .group{display:none}
+  .tab{flex:0 0 auto; background:var(--surface); border:1px solid var(--line); padding:6px 11px; white-space:nowrap}
+  .tab.on{border-color:var(--accent)}
+  main{padding:22px 16px 60px}
+  .grid2{grid-template-columns:1fr}
+  .panel h2{font-size:22px}
+}
+@media (prefers-reduced-motion: reduce){@keyframes fade{from,to{opacity:1; transform:none}}}
+
+/* page footer */
+body > footer{
+  margin:0 max(16px, env(safe-area-inset-left,0px)); padding:18px 0 22px;
+  border-top:1px solid var(--line); color:var(--muted);
+  font-size:12.5px; line-height:1.6; max-width:none;
+}
+footer p{margin:0}
+footer b{color:var(--ink); font-weight:600}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark">SQL·DS</div>
+  <div class="brand">SQL for Data Science — Cheatsheet
+    <small>IBM: Databases &amp; SQL for Data Science with Python · 29 lectures</small>
+  </div>
+  <div class="spacer"></div>
+  <button id="themeBtn" type="button" title="Cycle theme: system → light → dark">THEME · SYS</button>
+</header>
+
+<div class="searchwrap">
+  <input id="search" type="text" placeholder='Filter lectures… try "join", "group by", "cursor", "acid"' aria-label="Filter lectures">
+  <div class="searchmeta" id="searchMeta"></div>
+</div>
+
+<div class="shell">
+  <nav class="tabs" id="tabRail" aria-label="Lecture tabs"></nav>
+  <main id="panels">
+
+<!-- ══════════ 01 ══════════ -->
+<section class="panel" id="p01">
+  <p class="eyebrow">Basics · transcript: subtitle.txt (subtitle (1).txt is the same recording)</p>
+  <h2>Course Welcome &amp; Overview</h2>
+  <p class="lead">Why data matters, why SQL is the key to modern data repositories, how Python connects to databases — and the six-module roadmap for the whole course.</p>
+  <div class="block"><h3>Course roadmap</h3>
+    <div class="codewrap"><div class="bar"><span>roadmap</span></div><pre class="code"># Module 1  SQL basics — DML: INSERT / SELECT / UPDATE / DELETE
+# Module 2  DDL — CREATE / ALTER / DROP / TRUNCATE tables
+# Module 3  Built-in functions, sub-queries, multiple tables, joins
+# Module 4  Python for databases — Jupyter, DB-API, SQL Magic, EDA
+# Module 5  Hands-on project on real-world data
+# Module 6  Advanced — Views, Stored Procedures, ACID, Inner &amp; Outer JOINs</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Treat the roadmap as a checklist — after each module, tick what you can do from memory.</li>
+    <li>Don't skip the integrated labs: theory sticks only when you run the queries yourself.</li>
+    <li>SQL is the universal key; Python is the connector — different jobs, one workflow.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 02 ══════════ -->
+<section class="panel" id="p02">
+  <p class="eyebrow">Basics · transcript: subtitle (2).txt</p>
+  <h2>Data, Databases &amp; RDBMS</h2>
+  <p class="lead">The four foundations — data, database, DBMS/RDBMS, SQL — and the five commands that cover most of what people ever do with a database.</p>
+  <div class="block"><h3>Key definitions</h3><ul>
+    <li><b>SQL</b> — the language used for relational databases to query (get data out of) a database.</li>
+    <li><b>Data</b> — a collection of facts: words, numbers, or even pictures.</li>
+    <li><b>Database</b> — a repository of data; supports adding, modifying, and querying.</li>
+    <li><b>DBMS / RDBMS</b> — the set of software tools controlling access, organization, and storage. Examples: <span class="inline">MySQL</span>, <span class="inline">Oracle</span>, <span class="inline">DB2</span>.</li>
+  </ul></div>
+  <div class="block"><h3>The five basic commands</h3>
+    <div class="codewrap"><div class="bar"><span>sql · dialect-agnostic</span></div><pre class="code">CREATE TABLE ...    -- 1. create a table
+INSERT INTO ...     -- 2. populate the table (Create)
+SELECT ... FROM ... -- 3. read data               (Read)
+UPDATE ... SET ...  -- 4. change data             (Update)
+DELETE FROM ...     -- 5. remove rows             (Delete)</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>The five commands are identical across every RDBMS — product-specific syntax comes later (if ever).</li>
+    <li>In practice <span class="inline">database ≈ DBMS ≈ database server ≈ data server</span>; these terms are used interchangeably.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 03 ══════════ -->
+<section class="panel" id="p03">
+  <p class="eyebrow">Basics · transcript: subtitle (8).txt</p>
+  <h2>DDL vs DML</h2>
+  <p class="lead">Every SQL statement belongs to one of two families: DDL touches <b>structure</b> (tables), DML touches <b>content</b> (rows) — the CRUD operations.</p>
+  <div class="grid2">
+    <div class="block"><h3>DDL — definition</h3>
+      <div class="chips"><span class="chip">CREATE tables</span><span class="chip">ALTER structure</span><span class="chip">TRUNCATE data only</span><span class="chip">DROP table</span></div>
+      <p style="margin-top:10px">Define, change, or drop <b>database objects</b> such as tables.</p>
+    </div>
+    <div class="block"><h3>DML — manipulation</h3>
+      <div class="chips"><span class="chip">INSERT</span><span class="chip">SELECT</span><span class="chip">UPDATE</span><span class="chip">DELETE</span></div>
+      <p style="margin-top:10px">Read and modify data — <b>C</b>reate, <b>R</b>ead, <b>U</b>pdate, <b>D</b>elete rows.</p>
+    </div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Interview favorite: <b>DELETE is DML; TRUNCATE is DDL.</b></li>
+    <li><span class="inline">TRUNCATE</span> vs <span class="inline">DELETE</span> without WHERE: both empty a table, but truncate is quicker, more efficient, and resets storage.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 04 ══════════ -->
+<section class="panel" id="p04">
+  <p class="eyebrow">Basics · transcript: subtitle (3).txt</p>
+  <h2>Relational Model &amp; ER Model</h2>
+  <p class="lead">How the real world maps into tables: the relational model's data independence, ER entities → tables, attributes → columns, data types, and the PK/FK that later drive JOINs.</p>
+  <div class="block"><h3>Concept → relational result</h3>
+    <div class="tblwrap"><table>
+      <tr><th>ER concept</th><th>Relational result</th></tr>
+      <tr><td>Entity (noun: person, place, thing — drawn as a rectangle)</td><td><code>Table</code></td></tr>
+      <tr><td>Attribute (property of the entity — drawn as an oval)</td><td><code>Column</code></td></tr>
+      <tr><td>Data values</td><td><code>Rows</code></td></tr>
+      <tr><td>Identifier attribute</td><td><code>Primary key</code> — unique row, no duplication</td></tr>
+      <tr><td>Attribute referencing another table's PK</td><td><code>Foreign key</code> — the link between tables</td></tr>
+    </table></div>
+  </div>
+  <div class="block"><h3>Common data types</h3>
+    <div class="chips"><span class="chip">CHAR(n)</span><span class="chip">VARCHAR(n)</span><span class="chip">INTEGER</span><span class="chip">DECIMAL</span><span class="chip">DATE</span><span class="chip">TIME</span></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li><span class="inline">CHAR</span> = truly fixed length (ISBN with dashes, 2-letter country codes); <span class="inline">VARCHAR</span> = anything human-entered (titles, names, emails).</li>
+    <li>Sketch the ERD first, SQL second — the joins define themselves from PK→FK links.</li>
+    <li>The relational model's superpower = <b>logical + physical data independence</b> and storage independence.</li>
+  </ul></div>
+  <div class="block"><h3>Best use cases</h3><ul>
+    <li>Designing a new database from requirements — model first, build second.</li>
+    <li>Explaining why a table's structure is the way it is.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 05 ══════════ -->
+<section class="panel" id="p05">
+  <p class="eyebrow">Data Definition · transcript: subtitle (9).txt</p>
+  <h2>CREATE TABLE</h2>
+  <p class="lead">The most common DDL statement: table name, then column definitions — name, datatype, optional constraints — enclosed in one pair of parentheses, comma-separated.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Lookup table with a tiny fixed-length code
+CREATE TABLE provinces (
+    id   CHAR(2)    PRIMARY KEY NOT NULL,   -- 'AB', 'BC', ...
+    name VARCHAR(24)                        -- 'ALBERTA', 'BRITISH COLUMBIA', ...
+);
+
+-- Library example with constraints
+CREATE TABLE author (
+    author_id  CHAR(2)      PRIMARY KEY NOT NULL,
+    lastname   VARCHAR(15)  NOT NULL,
+    firstname  VARCHAR(15)  NOT NULL,
+    email      VARCHAR(40),
+    city       VARCHAR(15),
+    country    CHAR(2)
+);</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li><span class="inline">PRIMARY KEY</span> prevents duplicates; <span class="inline">NOT NULL</span> makes the field required (an author must have a name).</li>
+    <li>Designate the primary key at creation time — retrofitting uniqueness into a populated table is painful.</li>
+    <li>The last column has <b>no trailing comma</b> — the classic beginner syntax error.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 06 ══════════ -->
+<section class="panel" id="p06">
+  <p class="eyebrow">Data Definition · transcript: subtitle (10).txt</p>
+  <h2>ALTER · DROP · TRUNCATE</h2>
+  <p class="lead">DDL for changing an existing database: ALTER changes a table's structure, DROP removes the whole table, TRUNCATE empties all rows but keeps the table.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">ALTER TABLE author ADD COLUMN telephone_number BIGINT;
+ALTER TABLE author MODIFY telephone_number CHAR(20);   -- widen to allow "(" "+" "-"
+ALTER TABLE author DROP COLUMN telephone_number;
+
+DROP TABLE author;                 -- table + data gone
+
+TRUNCATE TABLE author IMMEDIATE;   -- DB2: all rows, not undoable
+-- MySQL / PostgreSQL: TRUNCATE TABLE author;</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Store phone numbers as <b>strings</b> — <span class="inline">(</span> <span class="inline">+</span> <span class="inline">-</span> break numeric columns.</li>
+    <li>ALTERing a populated column's datatype fails when existing data is incompatible — check first.</li>
+    <li>Mnemonic: TRUNCATE = fast <i>empty</i>; DROP = <i>demolish</i>. Neither takes a WHERE.</li>
+  </ul></div>
+  <aside class="note"><b>Gotcha</b><p><span class="inline">IMMEDIATE</span> on TRUNCATE (DB2) means: process now, <b>cannot be undone</b>.</p></aside>
+</section>
+
+<!-- ══════════ 07 ══════════ -->
+<section class="panel" id="p07">
+  <p class="eyebrow">Basics · transcript: subtitle (6).txt</p>
+  <h2>INSERT Statement</h2>
+  <p class="lead">Populating a table — one row at a time, or several comma-separated value tuples in a single statement.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql · DML: create</span></div><pre class="code">INSERT INTO author (author_id, lastname, firstname, email, city, country)
+VALUES ('A1', 'Chong', 'Raul', 'RFC@ca.ibm.com', 'Toronto', 'CA');
+
+-- Multiple rows in one statement
+INSERT INTO author (author_id, lastname, firstname, email, city, country)
+VALUES
+    ('A1', 'Chong', 'Raul', 'RFC@ca.ibm.com', 'Toronto', 'CA'),
+    ('A2', 'Ahuja', 'Rav',  'RA@ca.ibm.com',  'Markham', 'CA');</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li><b>Golden rule:</b> number of values = number of listed columns — that's what gives every column a value.</li>
+    <li>Always <b>name the columns</b> instead of relying on positional order — your code survives schema changes.</li>
+    <li>Text values need quotes (<span class="inline">'A1'</span>); numbers don't. Batch small loads into multi-row INSERTs.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 08 ══════════ -->
+<section class="panel" id="p08">
+  <p class="eyebrow">Basics · transcript: subtitle (4).txt</p>
+  <h2>SELECT · WHERE · Predicates</h2>
+  <p class="lead">A DBMS exists to facilitate retrieval, not just storage. SELECT returns a <b>result set</b>; WHERE restricts it via a <b>predicate</b> — a condition that evaluates to true, false, or unknown.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql · DML: read</span></div><pre class="code">SELECT * FROM book;                    -- 4 rows, all columns
+SELECT book_id, title FROM book;       -- output column order = SELECT order
+SELECT book_id, title
+FROM   book
+WHERE  book_id = 'B1';                 -- only rows where the predicate is TRUE</pre></div>
+  </div>
+  <div class="block"><h3>Comparison operators</h3>
+    <div class="chips"><span class="chip">=</span><span class="chip">&gt;</span><span class="chip">&lt;</span><span class="chip">&gt;=</span><span class="chip">&lt;=</span><span class="chip">&lt;&gt; / !=</span></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Avoid <span class="inline">SELECT *</span> in production code: name columns for less traffic, self-documentation, and schema-change safety.</li>
+    <li>A WHERE on a CHAR key (<span class="inline">'B1'</span>) compares strings — mind the quotes.</li>
+    <li>The "unknown" arm comes from NULL comparisons: NULL means <i>we don't know</i>, not false.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 09 ══════════ -->
+<section class="panel" id="p09">
+  <p class="eyebrow">Basics · transcript: subtitle (5).txt</p>
+  <h2>COUNT · DISTINCT · LIMIT</h2>
+  <p class="lead">Three expressions that turn "give me everything" into fast, focused queries: count rows, remove duplicates, restrict how many rows come back.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT COUNT(*)                 FROM tablename;                       -- all rows
+SELECT COUNT(COUNTRY)           FROM MEDALS WHERE COUNTRY = 'CANADA'; -- matching rows
+SELECT DISTINCT COUNTRY         FROM MEDALS WHERE MEDALTYPE = 'GOLD'; -- uniques
+SELECT *                        FROM MEDALS WHERE YEAR = 2018 LIMIT 5; -- a peek</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li><b>Explore with LIMIT, not SELECT *</b> — a few rows answer "what kind of data is this?" almost instantly, even on millions-of-row tables.</li>
+    <li><span class="inline">COUNT(DISTINCT COUNTRY)</span> answers "how many different X?" in one query.</li>
+    <li>Dialect spelling: <span class="inline">LIMIT</span> (MySQL/SQLite/PG), <span class="inline">TOP 10</span> (SQL Server), <span class="inline">FETCH FIRST 10 ROWS ONLY</span> (DB2/Oracle 12c+).</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 10 ══════════ -->
+<section class="panel" id="p10">
+  <p class="eyebrow">Basics · transcript: subtitle (7).txt</p>
+  <h2>UPDATE &amp; DELETE</h2>
+  <p class="lead">Altering and removing rows with DML. The central lesson: the WHERE clause is what saves your data — omit it and <b>every row</b> is updated or removed.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql · DML</span></div><pre class="code">SELECT * FROM author;  -- 1. preview current state
+
+-- 2. change FIRSTNAME and LASTNAME of the author with AUTHOR_ID = 'A2'
+UPDATE author
+   SET lastname = 'Katta', firstname = 'Lakshmi'
+ WHERE author_id = 'A2';
+
+-- 3. remove the rows for two authors
+DELETE FROM author WHERE author_id IN ('A2', 'A3');</pre></div>
+  </div>
+  <aside class="note"><b>Golden safety rules</b><p>① Write the WHERE clause <b>first</b>, before the UPDATE/DELETE body. ② Run the same WHERE as a SELECT to preview target rows. ③ Only then convert to UPDATE/DELETE — ideally inside a transaction (commit/rollback).</p></aside>
+  <div class="block"><h3>Best use cases</h3><ul>
+    <li>Data correction / cleansing — mis-entered names, bulk code updates.</li>
+    <li>GDPR-style removal of specific records, always with a previewed condition.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 11 ══════════ -->
+<section class="panel" id="p11">
+  <p class="eyebrow">Advanced Querying · transcript: subtitle (11).txt</p>
+  <h2>Refining SELECT — LIKE · BETWEEN · IN</h2>
+  <p class="lead">What if you don't know the exact value for the predicate? Three tools replace clumsy WHERE clauses: pattern matching, ranges, and value sets.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- String pattern: % is the wildcard (0+ of any character)
+SELECT firstname FROM author WHERE firstname LIKE 'R%';   -- starts with R
+SELECT firstname FROM author WHERE firstname LIKE '%on%'; -- contains "on"
+
+-- Range (inclusive) — same as pages >= 290 AND pages &lt;= 300
+SELECT title FROM book WHERE pages BETWEEN 290 AND 300;
+
+-- Set of values — avoids a very long repeated predicate
+SELECT * FROM author WHERE country IN ('CA', 'IN', 'CN');</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Pattern position is the whole trick: <span class="inline">'R%'</span> starts-with, <span class="inline">'%R'</span> ends-with, <span class="inline">'%R%'</span> contains.</li>
+    <li>LIKE is case-sensitive in some DBs — pair with <span class="inline">UPPER()</span>/<span class="inline">LOWER()</span> for robust matching.</li>
+    <li>BETWEEN is inclusive; with dates/timestamps the end boundary can silently bite — prefer half-open ranges.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 12 ══════════ -->
+<section class="panel" id="p12">
+  <p class="eyebrow">Advanced Querying · transcript: subtitle (12).txt</p>
+  <h2>Sorting Result Sets — ORDER BY</h2>
+  <p class="lead">Results come back in no particular order. ORDER BY sorts by one or more columns — ascending by default, DESC for descending, or by column position.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT title FROM book ORDER BY title;        -- alphabetical (ASC default)
+SELECT title FROM book ORDER BY title DESC;   -- descending
+SELECT title, pages FROM book ORDER BY 2;     -- sort by 2nd column in the list</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Prefer <span class="inline">ORDER BY columnname</span> over positional <span class="inline">ORDER BY 2</span> in anything saved — reordering the SELECT list silently retargets positional sorts.</li>
+    <li>Multi-column: <span class="inline">ORDER BY country ASC, lastname DESC</span> — later columns break ties.</li>
+    <li>ORDER BY runs <i>after</i> SELECT, so it can reference aliases; WHERE runs <i>before</i> and cannot.</li>
+  </ul></div>
+  <div class="block"><h3>Best use cases</h3><ul>
+    <li>Human-readable reporting; "top-N" queries: <span class="inline">… ORDER BY score DESC LIMIT 5</span>.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 13 ══════════ -->
+<section class="panel" id="p13">
+  <p class="eyebrow">Advanced Querying · transcript: subtitle (13).txt</p>
+  <h2>Grouping — DISTINCT · GROUP BY · HAVING</h2>
+  <p class="lead">The classic "how many X per Y?" build-up: kill duplicates with DISTINCT, count per group with GROUP BY, name derived columns with AS, filter groups with HAVING.</p>
+  <div class="block"><h3>Syntax &amp; code — progression on the author table</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT country FROM author ORDER BY 1;               -- 20 rows, duplicates
+SELECT DISTINCT country FROM author;                 -- 6 unique countries
+
+SELECT country, COUNT(*) AS "Count"                  -- per-country counts
+FROM author GROUP BY country;
+
+SELECT country, COUNT(*) AS "Count"                  -- keep only big groups
+FROM author
+GROUP BY country
+HAVING COUNT(*) &gt; 4;                                 -- → China 6, India 6</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Mnemonic: <b>WHERE filters rows; HAVING filters groups.</b> Conditions with aggregates belong in HAVING.</li>
+    <li>Logical order: WHERE → GROUP BY → aggregates → HAVING → SELECT → ORDER BY.</li>
+    <li><span class="inline">COUNT(*)</span> counts rows; <span class="inline">COUNT(column)</span> counts non-NULL values — matters on real data.</li>
+    <li>Use <span class="inline">AS</span> to name derived columns — the default heading for aggregates is meaningless junk ("2").</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 14 ══════════ -->
+<section class="panel" id="p14">
+  <p class="eyebrow">Advanced Querying · transcript: subtitle (14).txt</p>
+  <h2>Built-in Functions</h2>
+  <p class="lead">Aggregate, scalar, and string functions run data operations <b>inside the database</b> — less data over the wire, often faster than fetching first. Examples use the PETRESCUE table.</p>
+  <div class="block"><h3>Aggregate functions</h3>
+    <div class="codewrap"><div class="bar"><span>sql · petrescue</span></div><pre class="code">SELECT SUM(COST) FROM PETRESCUE;                     -- total of a column
+SELECT SUM(COST) AS SUM_OF_COST FROM PETRESCUE;      -- name the output column
+SELECT MAX(QUANTITY) FROM PETRESCUE;                 -- highest value
+SELECT MIN(ID) FROM PETRESCUE WHERE ANIMAL = 'Dog';  -- on a subset
+SELECT AVG(COST/QUANTITY) FROM PETRESCUE WHERE ANIMAL = 'Dog';  -- cost per dog</pre></div>
+  </div>
+  <div class="block"><h3>Scalar &amp; string functions</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT ROUND(COST) FROM PETRESCUE;                   -- round each value
+SELECT LENGTH(ANIMAL) FROM PETRESCUE;                -- length per value
+SELECT UPPERCASE(ANIMAL) FROM PETRESCUE;             -- UPPER() in most dialects
+SELECT * FROM PETRESCUE WHERE LOWERCASE(ANIMAL) = 'cat';  -- case-safe WHERE
+SELECT DISTINCT(UPPERCASE(ANIMAL)) FROM PETRESCUE;   -- nested functions</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Push computation to the database for large data; pull raw rows only when analysis can't be expressed in SQL.</li>
+    <li><span class="inline">UPPER/LOWER</span> in WHERE = cheap insurance against inconsistent data entry.</li>
+    <li>Always alias aggregate columns. Function-in-where on huge tables can prevent index use.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 15 ══════════ -->
+<section class="panel" id="p15">
+  <p class="eyebrow">Advanced Querying · transcript: subtitle (15).txt</p>
+  <h2>Date &amp; Time Functions</h2>
+  <p class="lead">Special date/time types plus extraction functions and date arithmetic — directly in SQL. DATE = 8 digits (YYYYMMDD), TIME = 6 (HHMMSS), TIMESTAMP = 20 (with microseconds).</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql · db2 flavor</span></div><pre class="code">SELECT DAY(RESCUE_DATE) FROM PETRESCUE WHERE ANIMAL = 'Cat'; -- day portion
+SELECT COUNT(*) FROM PETRESCUE WHERE MONTH(RESCUE_DATE) = 5; -- May sales
+SELECT DATE_ADD(RESCUE_DATE, INTERVAL 3 DAY) FROM PETRESCUE; -- +3 days
+SELECT CURRENT DATE - RESCUE_DATE FROM PETRESCUE;            -- elapsed since rescue
+                                                             -- in yrs, months, days</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Dialect spellings differ — DB2 <span class="inline">CURRENT DATE</span>, MySQL <span class="inline">CURDATE()</span>, SQLite <span class="inline">DATE(rescue_date,'+3 day')</span>, standard <span class="inline">CURRENT_DATE</span>.</li>
+    <li><span class="inline">MONTH(date)=5</span> scans every row; for big tables prefer a range on the column so indexes work.</li>
+    <li>BETWEEN on timestamps can miss late-Dec rows — use half-open ranges (<span class="inline">&gt;= start AND &lt; next start</span>).</li>
+  </ul></div>
+  <div class="block"><h3>Best use cases</h3><ul>
+    <li>Seasonality / day-of-week analysis; SLA math ("process within 3 days"); ageing queries.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 16 ══════════ -->
+<section class="panel" id="p16">
+  <p class="eyebrow">Advanced Querying · transcript: subtitle (16).txt</p>
+  <h2>Sub-Queries &amp; Nested SELECTs</h2>
+  <p class="lead">Sub-selects are queries wrapped in parentheses and nested inside another query — powerful because they let you <b>evaluate aggregates where you normally can't</b>.</p>
+  <div class="block"><h3>Three placements</h3>
+    <div class="codewrap"><div class="bar"><span>sql · employees</span></div><pre class="code">-- ① In the WHERE clause — the classic workaround:
+--    ❌ WHERE salary &gt; AVG(salary)  → "invalid use of aggregate function"
+SELECT employee_id, firstname, lastname, salary
+FROM   employees
+WHERE  salary &gt; (SELECT AVG(salary) FROM employees);
+
+-- ② In the column list — compare each row's salary with the average
+--    (naive version fails for lack of GROUP BY)
+SELECT employee_id, salary,
+       (SELECT AVG(salary) FROM employees) AS AVG_SALARY
+FROM   employees;
+
+-- ③ In the FROM clause — a derived table (excludes sensitive fields)
+SELECT * FROM
+   (SELECT employee_id, firstname, lastname, department_id
+    FROM   employees) AS EMPLOYEEF;</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Rule of thumb: <b>aggregate value needed for a comparison → sub-query.</b></li>
+    <li>Always alias derived tables (<span class="inline">AS EMPLOYEEF</span> — "employee for all", non-sensitive).</li>
+    <li>Derived tables show their real power in multi-table work and joins.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 17 ══════════ -->
+<section class="panel" id="p17">
+  <p class="eyebrow">Advanced Querying · transcript: subtitle (17).txt</p>
+  <h2>Multiple Tables — Sub-queries &amp; Implicit Joins</h2>
+  <p class="lead">Ways to access more than one table in the same query: sub-queries across tables, and implicit joins (comma-separated FROM). Explicit JOINs come in lectures 18–20.</p>
+  <div class="block"><h3>Syntax &amp; code — EMPLOYEES × DEPARTMENTS</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Sub-query: employees whose department exists / is in location L0002
+SELECT * FROM employees
+WHERE  DEP_ID IN (SELECT DEP_ID_DEP FROM departments);
+SELECT * FROM employees
+WHERE  DEP_ID IN (SELECT DEP_ID_DEP FROM departments WHERE LOC_ID = 'L0002');
+
+-- Reversed direction: departments of employees earning &gt; $70,000
+SELECT DEP_ID_DEP, DEP_NAME FROM departments
+WHERE  DEP_ID_DEP IN (SELECT DEP_ID FROM employees WHERE salary &gt; 70000);
+
+-- Implicit (full) join — every row × every row; MORE rows than either table
+SELECT * FROM employees, departments;
+
+-- Implicit join filtered to matching department IDs, with aliases
+SELECT E.EMP_ID, D.DEP_NAME
+FROM   employees E, departments D
+WHERE  E.DEP_ID = D.DEP_ID_DEP;</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Fully qualify columns (<span class="inline">employees.DEP_ID</span>) — different tables can share column names; aliases make it short.</li>
+    <li>When the condition is exactly <span class="inline">a.col = b.col</span>, prefer explicit <span class="inline">INNER JOIN … ON</span>, so the condition is never accidentally forgotten.</li>
+    <li>Forgot the WHERE on a two-table FROM = accidental Cartesian explosion.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 18 ══════════ -->
+<section class="panel" id="p18">
+  <p class="eyebrow">Multi-Table · transcript: subtitle12.txt</p>
+  <h2>JOIN Overview</h2>
+  <p class="lead">The JOIN operator combines rows from two or more tables based on a relationship between certain columns — usually a primary key in one table appearing as a foreign key in the other.</p>
+  <div class="block"><h3>How tables link</h3>
+    <div class="tblwrap"><table>
+      <tr><th>Key</th><th>Role in a join</th></tr>
+      <tr><td><code>Primary key</code> (icon in the ERD)</td><td>Uniquely identifies each row: <code>AUTHOR_ID</code>, <code>BOOK_ID</code>, <code>BORROWER_ID</code>, <code>COPY_ID</code></td></tr>
+      <tr><td><code>[FK]</code> Foreign key</td><td>References another table's PK — e.g. <code>LOAN.BORROWER_ID</code> → <code>BORROWER.BORROWER_ID</code></td></tr>
+    </table></div>
+  </div>
+  <div class="block"><h3>Join families</h3>
+    <div class="chips"><span class="chip">INNER JOIN — intersection only</span><span class="chip">OUTER JOIN — plus non-matches (LEFT / RIGHT / FULL)</span></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Sketch the ERD before writing joins — the key to join on is already in the diagram.</li>
+    <li>Three-table joins = simply add tables to the chain (BORROWER↔LOAN on borrower ID, LOAN↔COPY on copy ID).</li>
+    <li>Join key names don't have to match (<span class="inline">DEP_ID</span> vs <span class="inline">DEP_ID_DEP</span>) — the PK→FK relationship does.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 19 ══════════ -->
+<section class="panel" id="p19">
+  <p class="eyebrow">Multi-Table · transcript: subtitle15.txt</p>
+  <h2>Inner Join</h2>
+  <p class="lead">The most common join: only rows whose values <b>match in the common column</b> appear — non-matching rows are not displayed.</p>
+  <div class="block"><h3>Syntax &amp; code — BORROWER ⟕ LOAN</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Who is borrowing books, and the loan date
+SELECT B.BORROWER_ID, B.LASTNAME, B.COUNTRY, L.BORROWER_ID, L.LOAN_DATE
+FROM   BORROWER B                       -- left table (left of the JOIN clause)
+INNER JOIN LOAN L                       -- right table
+   ON B.BORROWER_ID = L.BORROWER_ID;    -- the join predicate</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li><span class="inline">INNER</span> is the default — <span class="inline">JOIN</span> alone means the same; write it explicitly for readability.</li>
+    <li>Declare aliases once (<span class="inline">FROM BORROWER B</span>) and prefix every column with them, in SELECT and ON alike.</li>
+    <li>Fan-out is expected: if the right table has several matches per left key, the left row repeats once per match — not a bug.</li>
+    <li>Borrowers with no loans don't appear here; they return with OUTER JOINs (next lecture).</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 20 ══════════ -->
+<section class="panel" id="p20">
+  <p class="eyebrow">Multi-Table · transcript: subtitle42.txt</p>
+  <h2>Outer Joins — LEFT · RIGHT · FULL</h2>
+  <p class="lead">Outer joins return all the matching rows of an inner join <b>plus</b> unmatched rows from one or both sides — filled with NULLs where data is missing.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- LEFT: all borrowers; Peters, Li, Wong show NULL loan data (never borrowed)
+SELECT B.BORROWER_ID, B.LASTNAME, B.COUNTRY, L.BORROWER_ID, L.LOAN_DATE
+FROM   BORROWER B
+LEFT OUTER JOIN LOAN L  ON B.BORROWER_ID = L.BORROWER_ID;
+
+-- RIGHT: all loans; one row has NULL borrower columns
+--        → "a book on loan to an unknown person" = a data problem to investigate
+SELECT L.BORROWER_ID, L.LOAN_DATE, B.LASTNAME, B.COUNTRY
+FROM   BORROWER B
+RIGHT OUTER JOIN LOAN L ON L.BORROWER_ID = B.BORROWER_ID;
+
+-- FULL: all rows from both tables (very large result set possible)
+SELECT B.BORROWER_ID, B.LASTNAME, L.LOAN_DATE
+FROM   BORROWER B
+FULL OUTER JOIN LOAN L ON B.BORROWER_ID = L.BORROWER_ID;</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Direction is about <b>position</b> in the statement, not importance — swap sides with LEFT before reaching for RIGHT.</li>
+    <li>Aggregate columns from the NULL side read NULL, not zero — wrap in <span class="inline">COALESCE(L.LOAN_DATE, 'never')</span> for reporting.</li>
+    <li>MySQL &amp; SQLite have no <span class="inline">FULL OUTER JOIN</span> — emulate with LEFT JOIN <span class="inline">UNION</span> RIGHT JOIN.</li>
+    <li>Treat unmatched-row NULLs as <i>signal</i> — RIGHT-join NULLs found a data-quality issue in the lecture.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 21 ══════════ -->
+<section class="panel" id="p21">
+  <p class="eyebrow">Python Access · transcript: subtitle (18).txt</p>
+  <h2>Python &amp; Databases — Overview</h2>
+  <p class="lead">Python connects to databases through APIs: the application builds SQL as text and hands it to the DBMS via API calls — connect → send → check status → fetch → disconnect.</p>
+  <div class="block"><h3>The SQL API flow</h3><ul>
+    <li><span class="b">1.</span> API call(s) <b>connect</b> the program to the DBMS.</li>
+    <li><span class="b">2.</span> Build the SQL statement as a <b>text string in a buffer</b>; an API call passes it to the DBMS.</li>
+    <li><span class="b">3.</span> API calls <b>check status / handle errors</b>; others retrieve query results.</li>
+    <li><span class="b">4.</span> An API call <b>disconnects</b> from the database.</li>
+  </ul></div>
+  <div class="block"><h3>Proprietary APIs by database</h3>
+    <div class="tblwrap"><table>
+      <tr><th>Database</th><th>API / library</th></tr>
+      <tr><td>MySQL</td><td>C API</td></tr>
+      <tr><td>PostgreSQL</td><td><code>psycopg2</code></td></tr>
+      <tr><td>IBM DB2</td><td><code>ibm_db</code></td></tr>
+      <tr><td>MS SQL Server</td><td><code>dblib</code></td></tr>
+      <tr><td>Windows DB access</td><td>ODBC</td></tr>
+      <tr><td>Oracle</td><td>OCI</td></tr>
+      <tr><td>Java apps</td><td>JDBC</td></tr>
+      <tr><td>MongoDB</td><td><code>pymongo</code></td></tr>
+    </table></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Internalize: applications never parse SQL themselves — they build text and hand it over; parsing, execution, errors, results all live in the DBMS.</li>
+    <li>Notebooks (Jupyter) = live code + equations + visualizations + narrative, shareable and rich-output — the course's home base.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 22 ══════════ -->
+<section class="panel" id="p22">
+  <p class="eyebrow">Python Access · transcript: subtitle (19).txt</p>
+  <h2>DB-API — Connections &amp; Cursors</h2>
+  <p class="lead">The Python DB-API is the standard that lets one program work with <b>any</b> relational database. Two main objects: the <b>Connection</b> (connect, commit, rollback, close) and the <b>Cursor</b> (run queries, scan results — like a file handle).</p>
+  <div class="block"><h3>The canonical 5-step program</h3>
+    <div class="codewrap"><div class="bar"><span>python</span></div><pre class="code"># 1. import the database module
+import ibm_db           # (or sqlite3, psycopg2, mysql.connector, ...)
+
+# 2. open the connection: db name, username, password
+conn = ibm_db.connect(dbname, username, password)
+
+# 3. create a cursor on the connection
+cursor = conn.cursor()
+
+# 4. run queries through the cursor, then fetch results
+cursor.execute('SELECT * FROM employees')
+results = cursor.fetchall()
+
+# 5. free resources — ALWAYS
+conn.close()</pre></div>
+  </div>
+  <div class="block"><h3>Connection methods</h3>
+    <div class="chips"><span class="chip">cursor()</span><span class="chip">commit()</span><span class="chip">rollback()</span><span class="chip">close()</span></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Memorize the rhythm: <b>connect → cursor → execute → fetch → close</b> — identical for every database Python meets.</li>
+    <li>Use <span class="inline">with sqlite3.connect(...) as conn:</span> / <span class="inline">try…finally</span> so <span class="inline">close()</span> runs even on exceptions.</li>
+    <li>Cursors from the same connection are not isolated; from different connections it depends on transaction implementation.</li>
+    <li><span class="inline">commit()</span>/<span class="inline">rollback()</span> on the connection are the ACID story (lecture 29) surfacing in Python.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 23 ══════════ -->
+<section class="panel" id="p23">
+  <p class="eyebrow">Python Access · transcript: subtitle (20).txt</p>
+  <h2>SQL Magic in Jupyter</h2>
+  <p class="lead">Magic commands are special notebook commands — not valid Python, but they change notebook behavior. Line magics (<span class="inline">%</span>) run one line; cell magics (<span class="inline">%%</span>) run whole cells, even in other languages.</p>
+  <div class="block"><h3>Set-up &amp; first query</h3>
+    <div class="codewrap"><div class="bar"><span>jupyter</span></div><pre class="code">! pip install ipython-sql        # 1. install the dependency
+%load_ext sql                    # 2. load the SQL extension
+%sql sqlite://HR.db              # 3. connect (SQLite example)
+
+%%sql                            # 4. cell magic runs whole-cell SQL
+SELECT * FROM employee</pre></div>
+  </div>
+  <div class="block"><h3>Popular magics</h3>
+    <div class="chips"><span class="chip">%pwd</span><span class="chip">%ls</span><span class="chip">%history</span><span class="chip">%reset</span><span class="chip">%who / %whos</span><span class="chip">%matplotlib inline</span><span class="chip">%timeit / %%timeit</span><span class="chip">%%bash / %%js / %%html</span></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Stack multiple line magics in one cell — each on its own line.</li>
+    <li><span class="inline">%timeit</span> times one statement; <span class="inline">%%timeit</span> times the entire cell — the canonical line/cell pair.</li>
+    <li>Use <span class="inline">%%sql</span> cell magic for anything longer than a line: the whole cell is SQL, so line-continuation backslashes become unnecessary (next lecture).</li>
+    <li>List all available magics with <span class="inline">%lsmagic</span>.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 24 ══════════ -->
+<section class="panel" id="p24">
+  <p class="eyebrow">Python Access · transcript: subtitle (22).txt</p>
+  <h2>Real-World Datasets — Hints &amp; Tips</h2>
+  <p class="lead">Real datasets arrive as CSVs (values separated by commas — sometimes semicolons). Loading them, quoting messy column names, splitting long queries, and the one habit that saves hours: LIMIT while exploring.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql + python</span></div><pre class="code">-- Backticks for column names with spaces/special chars (MySQL)
+-- ⚠ single or double quotes DO NOT WORK for column names
+SELECT `Breed`, COUNT(*) AS "Count" FROM dogs GROUP BY `Breed`;
+
+-- Restrict result server-side (don't SELECT * then df.head() — slow)
+SELECT * FROM census_data LIMIT 3;</pre></div>
+    <div class="codewrap"><div class="bar"><span>python</span></div><pre class="code"># pandas reads a query straight into a DataFrame
+query_statement = "SELECT `Name of Dog`, `Breed` FROM dogs LIMIT 5"
+df = pd.read_sql(query_statement, conn)
+
+# %sql line magic needs backslashes to continue lines
+%sql SELECT `Breed`, COUNT(*) AS "Count" \
+     FROM dogs \
+     GROUP BY `Breed`
+# ...but %%sql cell magic makes backslashes redundant</pre></div>
+  </div>
+  <div class="block"><h3>Quote decision tree</h3><ul>
+    <li>Column names that are reserved / have spaces → <b>backticks</b>.</li>
+    <li>SQL string <i>values</i> → <b>single quotes</b> (escape any inside with <span class="inline">\</span>).</li>
+    <li>Python string holding SQL → wrap in single quotes, use double quotes for quoted column names inside.</li>
+  </ul></div>
+  <div class="block"><h3>Loading CSVs (phpMyAdmin)</h3><ul>
+    <li>Browse the file → Format: <b>CSV</b> → check <b>"first line contains the table column names"</b> → Go.</li>
+    <li>MySQL auto-detects headers and generates the CREATE/INSERT statements; default table name = the file's name, lowercased.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 25 ══════════ -->
+<section class="panel" id="p25">
+  <p class="eyebrow">Python Access · transcript: subtitle (23).txt</p>
+  <h2>Table Metadata &amp; Catalogs</h2>
+  <p class="lead">Which table is it — <span class="inline">dog</span>, <span class="inline">dogs</span>, or <span class="inline">four_legged_mammals</span>? Every database has catalog tables you can query for the list of tables and their properties.</p>
+  <div class="block"><h3>Catalogs per system</h3>
+    <div class="tblwrap"><table>
+      <tr><th>System</th><th>Catalog</th></tr>
+      <tr><td>DB2</td><td><code>SYSCAT.TABLES</code></td></tr>
+      <tr><td>SQL Server</td><td><code>INFORMATION_SCHEMA.TABLES</code></td></tr>
+      <tr><td>SQLite3</td><td><code>sqlite_master</code></td></tr>
+      <tr><td>MySQL</td><td><code>SHOW TABLES</code></td></tr>
+    </table></div>
+    <div class="codewrap" style="margin-top:12px"><div class="bar"><span>sql · sqlite + mysql</span></div><pre class="code">SELECT name FROM sqlite_master WHERE type = 'table';  -- list SQLite tables
+PRAGMA table_info(table_name);                        -- attributes/columns
+SHOW TABLES;                                          -- MySQL: list tables
+DESCRIBE table_name;                                  -- MySQL: table details</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>The recon routine for any unfamiliar DB: <b>list tables → describe → SELECT * LIMIT 5</b>.</li>
+    <li><span class="inline">PRAGMA table_info</span> returns name, type, notnull, pk per column — schema info without any GUI.</li>
+    <li><span class="inline">sqlite_master.sql</span> even holds the original CREATE statements — lost-schema recovery.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 26 ══════════ -->
+<section class="panel" id="p26">
+  <p class="eyebrow">Python Access · transcript: subtitle (21).txt</p>
+  <h2>Analyzing Data with Python</h2>
+  <p class="lead">The module-4 capstone: a real dataset (McDonald's menu nutrition, from Kaggle) into SQLite3, back through pandas, then EDA — describe(), swarmplot, jointplot, boxplot.</p>
+  <div class="block"><h3>The pipeline</h3>
+    <div class="codewrap"><div class="bar"><span>python</span></div><pre class="code">import pandas as pd, sqlite3, seaborn as sns
+
+data = pd.read_csv('mcdonalds_menu_nutrition.csv')   # 1. CSV → DataFrame
+conn = sqlite3.connect('mcdonalds.db')               # 2. serverless DB
+data.to_sql('MCDONALDS_NUTRITION', conn)             # 3. load as table
+
+df = pd.read_sql('SELECT * FROM MCDONALDS_NUTRITION', conn)  # 4. back out
+df.head(); df.describe()                             #    260 items, 9 categories
+
+# 5. find the max-sodium item: visualize first, confirm numerically
+sns.swarmplot(x='Category', y='Sodium', data=df)     # spots ~3,600 mg
+idx  = df['Sodium'].idxmax()                         # index at max → 82
+item = df.at[idx, 'Item']                            # → Chicken McNuggets (40 piece)
+
+sns.jointplot(x='Protein', y='Total Fat', data=df)   # scatter + histograms,
+                                                     # Pearson r = 0.81
+sns.boxplot(df['Sugars'])                            # middle 50% + outliers</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li><b>CSV → SQLite → pandas → seaborn</b>: the fastest way to make any local dataset SQL-queryable with zero server setup.</li>
+    <li>Visualize first (the swarmplot flags the outlier), then confirm numerically (<span class="inline">idxmax</span> + <span class="inline">.at</span>).</li>
+    <li>Correlation lives between <b>−1 and +1</b>; 0.81 = strongly positive.</li>
+    <li><span class="inline">.at</span> takes <b>(index, column)</b> — people instinctively flip the order and get errors.</li>
+    <li>Box plot: the box is the middle 50% of data; lines/points show skewness and outliers (sugar outliers ≈ 128 g).</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 27 ══════════ -->
+<section class="panel" id="p27">
+  <p class="eyebrow">Advanced Server · transcript: subtitle (26).txt</p>
+  <h2>Views</h2>
+  <p class="lead">An alternative way of representing data that exists in one or more base tables — a named results table you query like one. A view stores <b>only its definition</b>; it is dynamic, re-running its SELECT on every use.</p>
+  <div class="block"><h3>Syntax &amp; code</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Omit sensitive columns (salary, birthdate)
+CREATE VIEW EMPINFO
+   (EMP_ID, NAME, ADDRESS, JOB_ID, MANAGER_ID, DEPT_ID)
+   AS SELECT ID, NAME, ADDRESS, JOB_ID, MGR_ID, DEPT_ID
+   FROM EMPLOYEES;
+
+SELECT * FROM EMPINFO;    -- query like a table
+
+-- Filtered view: only one manager's rows
+CREATE VIEW MGR_EMPINFO AS
+   SELECT NAME, ADDRESS, JOB_ID FROM EMPLOYEES
+   WHERE MANAGER_ID = 30002;
+
+DROP VIEW EMPINFO;        -- remove completely</pre></div>
+  </div>
+  <div class="block"><h3>When to use a view</h3><ul>
+    <li>Omit <b>sensitive data</b> (tax info, birth dates, salaries).</li>
+    <li>Combine tables in meaningful ways; show only what one process needs.</li>
+    <li>Grant access to the view <b>without</b> granting access to the underlying tables.</li>
+  </ul></div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Reads/Writes through a view touch the base tables — data lives there, the view is just the definition.</li>
+    <li>The defining SELECT may use WHERE / GROUP BY / HAVING and other views — but <b>no ORDER BY</b>, no host variables; view names up to 128 characters.</li>
+    <li>Views being dynamic = they track schema/data changes automatically; no refresh job.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 28 ══════════ -->
+<section class="panel" id="p28">
+  <p class="eyebrow">Advanced Server · transcript: subtitle (25).txt</p>
+  <h2>Stored Procedures</h2>
+  <p class="lead">A set of SQL statements stored and executed <b>on the database server</b> — the client sends one CALL instead of many statements. Parameters in, results out.</p>
+  <div class="block"><h3>Why</h3>
+    <div class="chips"><span class="chip">↓ network traffic (1 call)</span><span class="chip">↑ performance (runs at the data)</span><span class="chip">code reuse</span><span class="chip">security (validate server-side)</span></div>
+  </div>
+  <div class="block"><h3>Syntax &amp; code — UPDATE_SAL(emp, rating)</h3>
+    <div class="codewrap"><div class="bar"><span>sql pl</span></div><pre class="code">DELIMITER $$                       -- stop ';' ending the definition early
+
+CREATE PROCEDURE UPDATE_SAL(IN EMP_NUM INT, IN THE_RATING INT)
+  LANGUAGE SQL
+  BEGIN
+      IF (THE_RATING = 1) THEN
+          UPDATE EMPLOYEES SET SALARY = SALARY * 1.10   -- 10% raise
+           WHERE EMPLOYEE_ID = EMP_NUM;
+      ELSE
+          UPDATE EMPLOYEES SET SALARY = SALARY * 1.05   -- 5% raise
+           WHERE EMPLOYEE_ID = EMP_NUM;
+      END IF;
+  END
+$$
+
+DELIMITER ;                        -- restore the normal delimiter
+
+CALL UPDATE_SAL('E5001', 1);       -- invoke from SQL or an application</pre></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>Delimiter discipline: set <span class="inline">$$</span> before, restore <span class="inline">;</span> after — forgetting the second line breaks everything you type next.</li>
+    <li>Think of procedures as <b>the database's API</b>: thin, stable client code even when tables change.</li>
+    <li>⚠ SQL is <b>not</b> a fully-fledged programming language — don't move all your business logic into procedures.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ 29 ══════════ -->
+<section class="panel" id="p29">
+  <p class="eyebrow">Advanced Server · transcript: subtitle (24).txt</p>
+  <h2>ACID Transactions</h2>
+  <p class="lead">A transaction is an <b>indivisible unit of work</b>: every statement must complete successfully (a new stable state) — or none, leaving the database exactly as before. BEGIN → … → COMMIT or ROLLBACK.</p>
+  <div class="block"><h3>The bank-purchase example — Rose buys $200 boots</h3>
+    <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">BEGIN;                                 -- implicit on Db2 on Cloud
+
+UPDATE accounts  SET balance = balance - 200  WHERE who = 'ROSE';
+UPDATE accounts  SET balance = balance + 200  WHERE who = 'SHOE_SHOP';
+UPDATE inventory SET stock   = stock   - 1    WHERE item = 'Boots';
+
+COMMIT;    -- all three succeeded → persist everything
+-- OR
+ROLLBACK;  -- any failed (insufficient funds) → undo all, back to before</pre></div>
+  </div>
+  <div class="block"><h3>ACID</h3>
+    <div class="tblwrap"><table>
+      <tr><th></th><th>Property</th></tr>
+      <tr><td><b>A</b></td><td><b>Atomic</b> — all changes performed successfully, or not at all</td></tr>
+      <tr><td><b>C</b></td><td><b>Consistent</b> — data consistent before <i>and</i> after the transaction</td></tr>
+      <tr><td><b>I</b></td><td><b>Isolated</b> — no other process can change the data while it runs</td></tr>
+      <tr><td><b>D</b></td><td><b>Durable</b> — committed changes must persist</td></tr>
+    </table></div>
+  </div>
+  <div class="block"><h3>Tips &amp; tricks</h3><ul>
+    <li>In application code, tie <span class="inline">COMMIT</span> to the success path and <span class="inline">ROLLBACK</span> to the exception path — that's the whole pattern; this is what <span class="inline">conn.commit()</span>/<span class="inline">conn.rollback()</span> from lecture 22 are.</li>
+    <li>Don't hold transactions open while waiting on user input or slow logic — Isolated blocks everyone meanwhile.</li>
+    <li>SQL in Java/C/R/Python goes through database-specific APIs (JDBC, <span class="inline">ibm_db</span>…), often with <span class="inline">EXEC SQL</span>-style commands.</li>
+  </ul></div>
+</section>
+
+<!-- ══════════ CC · cheat card ══════════ -->
+<section class="panel" id="pCC">
+  <p class="eyebrow">One page · everything at a glance</p>
+  <h2>The Cheat Card</h2>
+  <p class="lead">The highest-frequency syntax and habits from all 29 lectures, on one page.</p>
+
+  <div class="grid2">
+    <div class="block"><h3>SELECT skeleton (evaluation order)</h3>
+      <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT   cols, AGG(col) AS alias
+FROM     table [alias]
+WHERE    row-predicate            -- before grouping
+GROUP BY group-cols
+HAVING   agg-predicate            -- filters groups
+ORDER BY col [ASC|DESC]
+LIMIT    n;                       -- dialect: TOP / FETCH FIRST</pre></div>
+    </div>
+    <div class="block"><h3>Aggregates &amp; friends</h3>
+      <div class="chips"><span class="chip">COUNT(*)</span><span class="chip">SUM / MIN / MAX / AVG</span><span class="chip">DISTINCT</span><span class="chip">ROUND / LENGTH</span><span class="chip">UPPER / LOWER</span><span class="chip">DAY / MONTH</span><span class="chip">DATE_ADD(x, INTERVAL 3 DAY)</span><span class="chip">CURRENT DATE</span></div>
+    </div>
+    <div class="block"><h3>WHERE toolkit</h3>
+      <div class="chips"><span class="chip">= &gt; &lt; &gt;= &lt;= !=</span><span class="chip">LIKE 'R%' · '%on' · '%R%'</span><span class="chip">BETWEEN a AND b</span><span class="chip">IN ('x','y')</span><span class="chip">AND / OR / NOT</span><span class="chip">IS NULL</span></div>
+    </div>
+    <div class="block"><h3>JOIN families</h3>
+      <div class="tblwrap"><table>
+        <tr><th>Type</th><th>Returns</th></tr>
+        <tr><td><code>INNER JOIN</code></td><td>matching pairs only</td></tr>
+        <tr><td><code>LEFT JOIN</code></td><td>all left rows + matches (NULLs right)</td></tr>
+        <tr><td><code>RIGHT JOIN</code></td><td>all right rows + matches (NULLs left)</td></tr>
+        <tr><td><code>FULL JOIN</code></td><td>everything, NULLs on both sides</td></tr>
+      </table></div>
+      <p style="margin-top:8px">Join on PK ↔ FK; alias tables (<span class="inline">B</span>, <span class="inline">L</span>).</p>
+    </div>
+    <div class="block"><h3>DDL quick reference</h3>
+      <div class="tblwrap"><table>
+        <tr><th>Statement</th><th>Effect</th></tr>
+        <tr><td><code>CREATE TABLE</code></td><td>new table + columns + constraints</td></tr>
+        <tr><td><code>ALTER TABLE</code></td><td>ADD / MODIFY / DROP COLUMN</td></tr>
+        <tr><td><code>TRUNCATE</code></td><td>empty the table (DDL, fast)</td></tr>
+        <tr><td><code>DROP TABLE</code></td><td>remove table + data</td></tr>
+        <tr><td><code>CREATE VIEW</code></td><td>named, dynamic saved query</td></tr>
+      </table></div>
+    </div>
+    <div class="block"><h3>Python access</h3>
+      <div class="codewrap"><div class="bar"><span>python</span></div><pre class="code">conn = sqlite3.connect('x.db')
+cur  = conn.cursor()
+cur.execute(sql); rows = cur.fetchall()
+conn.commit(); conn.close()
+
+# or, notebook style:
+# %load_ext sql  →  %sql sqlite://HR.db</pre></div>
+    </div>
+  </div>
+
+  <div class="block" style="margin-top:26px"><h3>Top 10 habits from the whole course</h3><ul>
+    <li><b>Write the WHERE first</b> on every UPDATE/DELETE; preview it as a SELECT.</li>
+    <li><b>LIMIT while exploring</b> — never SELECT * a huge table just to peek.</li>
+    <li><b>WHERE filters rows, HAVING filters groups.</b></li>
+    <li>Prefer <b>explicit JOIN … ON</b> over comma-joins; alias tables and qualify columns.</li>
+    <li>Store phone numbers as strings; pick CHAR only for truly fixed lengths.</li>
+    <li>Name derived columns with <b>AS</b> — aggregates default to meaningless headings.</li>
+    <li>Compare against an aggregate? That's a <b>sub-query</b>.</li>
+    <li>NULLs unmatched after outer joins are <b>signal</b>, not noise — investigate them.</li>
+    <li>Sensitive column? Serve a <b>view</b>, grant on the view, never the table.</li>
+    <li>Multi-step money/inventory changes belong in <b>ACID transactions</b>.</li>
+  </ul></div>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <p><b>About this page</b> — a personal cheatsheet: my own summary of what I
+  learned while completing the IBM course <i>“Databases and SQL for Data
+  Science with Python”</i>. Distilled from my study notes taken on the
+  course's video transcripts, rewritten and reorganized into 29 lecture tabs
+  plus a one-page cheat card. Course examples are kept as used in the course;
+  raw transcripts are not included.</p>
+</footer>
+
+<script>
+/* ── tab rail data (id, number, short title, group) ── */
+const GROUPS = {1:"Basics", 2:"Data definition", 3:"DML & querying", 4:"Advanced querying", 5:"Multi-table", 6:"Python access", 7:"Advanced server", 8:"Cheat card"};
+const TABS = [
+  ["pCC","CC","The Cheat Card",8,true],
+  ["p01","01","Course Welcome & Overview",1],
+  ["p02","02","Data, Databases & RDBMS",1],
+  ["p03","03","DDL vs DML",1],
+  ["p04","04","Relational Model & ER Model",1],
+  ["p05","05","CREATE TABLE",2],
+  ["p06","06","ALTER · DROP · TRUNCATE",2],
+  ["p07","07","INSERT Statement",3],
+  ["p08","08","SELECT · WHERE · Predicates",3],
+  ["p09","09","COUNT · DISTINCT · LIMIT",3],
+  ["p10","10","UPDATE & DELETE",3],
+  ["p11","11","LIKE · BETWEEN · IN",4],
+  ["p12","12","ORDER BY",4],
+  ["p13","13","GROUP BY · HAVING",4],
+  ["p14","14","Built-in Functions",4],
+  ["p15","15","Date & Time Functions",4],
+  ["p16","16","Sub-Queries",5],
+  ["p17","17","Multiple Tables",5],
+  ["p18","18","JOIN Overview",5],
+  ["p19","19","Inner Join",5],
+  ["p20","20","Outer Joins",5],
+  ["p21","21","Python & Databases",6],
+  ["p22","22","DB-API",6],
+  ["p23","23","SQL Magic",6],
+  ["p24","24","Real-World Datasets",6],
+  ["p25","25","Metadata & Catalogs",6],
+  ["p26","26","Analyzing with Python",6],
+  ["p27","27","Views",7],
+  ["p28","28","Stored Procedures",7],
+  ["p29","29","ACID Transactions",7],
+];
+/* keywords per panel for search (title + these) */
+const KW = {
+  pCC:"summary quick reference skeletons",
+  p01:"intro roadmap modules welcome",
+  p02:"dbms rdbms mysql oracle db2 five commands crud",
+  p03:"definition manipulation truncate drop crud",
+  p04:"erd entity attribute primary foreign key varchar char independence",
+  p05:"ddl create provinces author not null",
+  p06:"alter modify drop truncate immediate bigint telephone",
+  p07:"insert populate values multiple rows",
+  p08:"select where predicate result set comparison operators",
+  p09:"count distinct limit medals",
+  p10:"update delete where safety in (",
+  p11:"like wildcard percent between in string pattern ranges sets",
+  p12:"order by sort ascending descending positional",
+  p13:"distinct group by having as aggregate counts",
+  p14:"sum min max avg round length upper lowercase aggregate scalar string petrescue",
+  p15:"date time timestamp day month current date_add interval arithmetic",
+  p16:"subquery subselect nested derived table column expression average where from",
+  p17:"implicit join cartesian aliases fully qualified in subquery departments employees",
+  p18:"join overview primary foreign key inner outer intersection",
+  p19:"inner join on alias left table loan borrower",
+  p20:"left right full outer join null union coalesce unknown borrower",
+  p21:"python notebook jupyter api jdbc odbc oci psycopg2 ibm_db dblib pymongo",
+  p22:"db-api connection cursor execute fetchall commit rollback close",
+  p23:"magic jupyter line cell load_ext sql timeit lsmagic",
+  p24:"csv phpmyadmin backticks read_sql limit continuation backslash quotes",
+  p25:"sqlite_master pragma table_info describe show tables syscat information_schema catalog",
+  p26:"sqlite3 pandas read_csv to_sql describe idxmax swarmplot jointplot boxplot seaborn correlation",
+  p27:"create view drop view dynamic security sensitive",
+  p28:"stored procedure delimiter call sql pl parameters security",
+  p29:"acid atomic consistent isolated durable begin commit rollback transaction"
+};
+
+const rail = document.getElementById('tabRail');
+const meta = document.getElementById('searchMeta');
+const panels = document.querySelectorAll('.panel');
+
+/* build the rail */
+let lastGroup = 0;
+for (const [id, no, title, group, star] of TABS){
+  if (group !== lastGroup){
+    const g = document.createElement('div'); g.className = 'group'; g.textContent = GROUPS[group];
+    rail.appendChild(g); lastGroup = group;
+  }
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'tab' + (star ? ' star' : '');
+  b.dataset.id = id; b.dataset.title = title.toLowerCase();
+  b.dataset.kw = (KW[id] || '').toLowerCase();
+  const n = document.createElement('span'); n.className = 'no'; n.textContent = no;
+  b.appendChild(n); b.appendChild(document.createTextNode(title));
+  b.addEventListener('click', () => activate(id, true));
+  rail.appendChild(b);
+}
+
+function activate(id, save){
+  panels.forEach(p => p.classList.toggle('show', p.id === id));
+  rail.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.id === id));
+  const active = rail.querySelector('.tab.on');
+  if (active) active.scrollIntoView({block:'nearest'});
+  document.getElementById('panels').scrollIntoView({block:'start'});
+  if (save){ try{ localStorage.setItem('sqlcs-tab', id); }catch(e){} }
+}
+
+/* search: filter rail buttons */
+document.getElementById('search').addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  let shown = 0;
+  rail.querySelectorAll('.tab').forEach(t => {
+    const hit = !q || t.dataset.title.includes(q) || t.dataset.kw.includes(q);
+    t.hidden = !hit; if (hit) shown++;
+  });
+  meta.textContent = q ? (shown ? shown + " of " + TABS.length + " lectures match" : "no lectures match “" + e.target.value + "”") : "";
+});
+
+/* code highlighting: strings, comments, keywords */
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+const KWSQL = /^(SELECT|FROM|WHERE|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|ALTER|MODIFY|DROP|TRUNCATE|VIEW|PROCEDURE|LANGUAGE|BEGIN|END|INNER|LEFT|RIGHT|FULL|OUTER|JOIN|ON|AS|DISTINCT|LIMIT|GROUP|BY|HAVING|ORDER|DESC|ASC|COUNT|SUM|MIN|MAX|AVG|LIKE|BETWEEN|IN|AND|OR|NOT|NULL|PRIMARY|KEY|COMMIT|ROLLBACK|CALL|DELIMITER|UNION|COL|BY)$/i;
+function highlight(pre){
+  const lines = pre.textContent.split('\n');
+  const out = lines.map(function(line){
+    let parts = line.split(/('(?:[^']|'')*'|--.*$|#.*$)/);
+    let html = '';
+    parts.forEach(function(p, i){
+      if (i % 2 === 1){ html += '<span class="cm">' + esc(p) + '</span>'; return; }
+      p.split(/('(?:[^'\n]*)')/).forEach(function(q, j){
+        if (j % 2 === 1){ html += '<span class="st">' + esc(q) + '</span>'; return; }
+        html += esc(q).replace(/[A-Za-z_]+/g, function(w){
+          return KWSQL.test(w) ? '<b class="kw">' + w + '</b>' : w;
+        });
+      });
+    });
+    return html;
+  });
+  pre.innerHTML = out.join('\n');
+}
+document.querySelectorAll('.code').forEach(highlight);
+
+/* theme cycling: system → light → dark */
+const themeBtn = document.getElementById('themeBtn');
+const THEMES = ["sys","light","dark"];
+let ti = 0;
+try{ ti = THEMES.indexOf(localStorage.getItem('sqlcs-theme') || "sys"); if (ti < 0) ti = 0; }catch(e){}
+function applyTheme(){
+  const t = THEMES[ti];
+  document.documentElement.removeAttribute('data-theme');
+  if (t === "light") document.documentElement.setAttribute('data-theme','light');
+  if (t === "dark")  document.documentElement.setAttribute('data-theme','dark');
+  themeBtn.textContent = 'THEME · ' + (t === "sys" ? "SYS" : t.toUpperCase());
+  try{ localStorage.setItem('sqlcs-theme', t); }catch(e){}
+}
+themeBtn.addEventListener('click', () => { ti = (ti + 1) % THEMES.length; applyTheme(); });
+applyTheme();
+
+/* restore last tab */
+let lastTab = "pCC";
+try{ lastTab = localStorage.getItem('sqlcs-tab') || "pCC"; }catch(e){}
+activate(document.getElementById(lastTab) ? lastTab : "pCC", false);
+</script>
+</body>
+</html>
