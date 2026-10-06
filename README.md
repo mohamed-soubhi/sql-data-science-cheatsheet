@@ -9,8 +9,9 @@
 A condensed, browsable cheatsheet: 29 lecture summaries plus a one-page
 cheat card, all in a single interactive HTML page.
 
-> Open **`sql-cheatsheet.html`** in any browser — it works completely offline
-> (no external dependencies beyond fonts, which degrade gracefully).
+> **Live:** https://mohamed-soubhi.github.io/sql-data-science-cheatsheet/
+> (also available locally as **`index.html`** — works completely offline,
+> no external dependencies beyond fonts, which degrade gracefully).
 
 ## What's inside the page
 
