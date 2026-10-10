@@ -4,5 +4,8 @@ subtitle*.txt
 # Per-lecture markdown notes — kept local only
 lectures/
 
+# Study sandbox — kept local only
+sandbox/
+
 # Personal working files
 linkedin-post.md
