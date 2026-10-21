@@ -148,6 +148,25 @@ table{border-collapse:collapse; width:100%; font-size:13.5px}
 th,td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); vertical-align:top}
 th{font:600 11px/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing:.8px; text-transform:uppercase; color:var(--muted)}
 td code{font:400 .88em/1.4 "IBM Plex Mono", ui-monospace, monospace}
+/* companion notebook bar */
+.nb-bar{
+  display:inline-flex; align-items:center; flex-wrap:wrap; gap:8px;
+  margin:4px 0 18px; padding:6px 12px;
+  background:var(--surface); border:1px solid var(--line); border-radius:6px;
+  font:400 12.5px/1.4 "IBM Plex Mono", ui-monospace, monospace;
+}
+.nb-bar .nb-tag{
+  color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.6px; font-weight:600;
+}
+.nb-bar a{
+  color:var(--accent-ink); text-decoration:none; font-weight:500;
+}
+.nb-bar a:hover{
+  text-decoration:underline;
+}
+.nb-bar .nb-sep{
+  color:var(--line);
+}
 .tblwrap{overflow-x:auto}
 
 /* cheat-card grid */
@@ -203,6 +222,7 @@ footer b{color:var(--ink); font-weight:600}
   <p class="eyebrow">Basics · transcript: subtitle.txt (subtitle (1).txt is the same recording)</p>
   <h2>Course Welcome &amp; Overview</h2>
   <p class="lead">Why data matters, why SQL is the key to modern data repositories, how Python connects to databases — and the six-module roadmap for the whole course.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/01-course-welcome-and-overview.ipynb" download>01-course-welcome-and-overview.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/01-course-welcome-and-overview.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Course roadmap</h3>
     <div class="codewrap"><div class="bar"><span>roadmap</span></div><pre class="code"># Module 1  SQL basics — DML: INSERT / SELECT / UPDATE / DELETE
 # Module 2  DDL — CREATE / ALTER / DROP / TRUNCATE tables
@@ -223,6 +243,7 @@ footer b{color:var(--ink); font-weight:600}
   <p class="eyebrow">Basics · transcript: subtitle (2).txt</p>
   <h2>Data, Databases &amp; RDBMS</h2>
   <p class="lead">The four foundations — data, database, DBMS/RDBMS, SQL — and the five commands that cover most of what people ever do with a database.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/02-sql-databases-and-rdbms.ipynb" download>02-sql-databases-and-rdbms.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/02-sql-databases-and-rdbms.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Key definitions</h3><ul>
     <li><b>SQL</b> — the language used for relational databases to query (get data out of) a database.</li>
     <li><b>Data</b> — a collection of facts: words, numbers, or even pictures.</li>
@@ -247,6 +268,7 @@ DELETE FROM ...     -- 5. remove rows             (Delete)</pre></div>
   <p class="eyebrow">Basics · transcript: subtitle (8).txt</p>
   <h2>DDL vs DML</h2>
   <p class="lead">Every SQL statement belongs to one of two families: DDL touches <b>structure</b> (tables), DML touches <b>content</b> (rows) — the CRUD operations.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/03-types-of-sql-statements-ddl-vs-dml.ipynb" download>03-types-of-sql-statements-ddl-vs-dml.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/03-types-of-sql-statements-ddl-vs-dml.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="grid2">
     <div class="block"><h3>DDL — definition</h3>
       <div class="chips"><span class="chip">CREATE tables</span><span class="chip">ALTER structure</span><span class="chip">TRUNCATE data only</span><span class="chip">DROP table</span></div>
@@ -268,6 +290,7 @@ DELETE FROM ...     -- 5. remove rows             (Delete)</pre></div>
   <p class="eyebrow">Basics · transcript: subtitle (3).txt</p>
   <h2>Relational Model &amp; ER Model</h2>
   <p class="lead">How the real world maps into tables: the relational model's data independence, ER entities → tables, attributes → columns, data types, and the PK/FK that later drive JOINs.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/04-database-concepts-relational-model.ipynb" download>04-database-concepts-relational-model.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/04-database-concepts-relational-model.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Concept → relational result</h3>
     <div class="tblwrap"><table>
       <tr><th>ER concept</th><th>Relational result</th></tr>
@@ -297,6 +320,7 @@ DELETE FROM ...     -- 5. remove rows             (Delete)</pre></div>
   <p class="eyebrow">Data Definition · transcript: subtitle (9).txt</p>
   <h2>CREATE TABLE</h2>
   <p class="lead">The most common DDL statement: table name, then column definitions — name, datatype, optional constraints — enclosed in one pair of parentheses, comma-separated.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/05-create-table.ipynb" download>05-create-table.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/05-create-table.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Lookup table with a tiny fixed-length code
 CREATE TABLE provinces (
@@ -326,6 +350,7 @@ CREATE TABLE author (
   <p class="eyebrow">Data Definition · transcript: subtitle (10).txt</p>
   <h2>ALTER · DROP · TRUNCATE</h2>
   <p class="lead">DDL for changing an existing database: ALTER changes a table's structure, DROP removes the whole table, TRUNCATE empties all rows but keeps the table.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/06-alter-drop-and-truncate.ipynb" download>06-alter-drop-and-truncate.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/06-alter-drop-and-truncate.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">ALTER TABLE author ADD COLUMN telephone_number BIGINT;
 ALTER TABLE author MODIFY telephone_number CHAR(20);   -- widen to allow "(" "+" "-"
@@ -349,6 +374,7 @@ TRUNCATE TABLE author IMMEDIATE;   -- DB2: all rows, not undoable
   <p class="eyebrow">Basics · transcript: subtitle (6).txt</p>
   <h2>INSERT Statement</h2>
   <p class="lead">Populating a table — one row at a time, or several comma-separated value tuples in a single statement.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/07-insert-statement.ipynb" download>07-insert-statement.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/07-insert-statement.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql · DML: create</span></div><pre class="code">INSERT INTO author (author_id, lastname, firstname, email, city, country)
 VALUES ('A1', 'Chong', 'Raul', 'RFC@ca.ibm.com', 'Toronto', 'CA');
@@ -371,6 +397,7 @@ VALUES
   <p class="eyebrow">Basics · transcript: subtitle (4).txt</p>
   <h2>SELECT · WHERE · Predicates</h2>
   <p class="lead">A DBMS exists to facilitate retrieval, not just storage. SELECT returns a <b>result set</b>; WHERE restricts it via a <b>predicate</b> — a condition that evaluates to true, false, or unknown.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/08-select-statement-where-clause.ipynb" download>08-select-statement-where-clause.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/08-select-statement-where-clause.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql · DML: read</span></div><pre class="code">SELECT * FROM book;                    -- 4 rows, all columns
 SELECT book_id, title FROM book;       -- output column order = SELECT order
@@ -393,6 +420,7 @@ WHERE  book_id = 'B1';                 -- only rows where the predicate is TRUE<
   <p class="eyebrow">Basics · transcript: subtitle (5).txt</p>
   <h2>COUNT · DISTINCT · LIMIT</h2>
   <p class="lead">Three expressions that turn "give me everything" into fast, focused queries: count rows, remove duplicates, restrict how many rows come back.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/09-count-distinct-limit.ipynb" download>09-count-distinct-limit.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/09-count-distinct-limit.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT COUNT(*)                 FROM tablename;                       -- all rows
 SELECT COUNT(COUNTRY)           FROM MEDALS WHERE COUNTRY = 'CANADA'; -- matching rows
@@ -411,6 +439,7 @@ SELECT *                        FROM MEDALS WHERE YEAR = 2018 LIMIT 5; -- a peek
   <p class="eyebrow">Basics · transcript: subtitle (7).txt</p>
   <h2>UPDATE &amp; DELETE</h2>
   <p class="lead">Altering and removing rows with DML. The central lesson: the WHERE clause is what saves your data — omit it and <b>every row</b> is updated or removed.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/10-update-and-delete.ipynb" download>10-update-and-delete.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/10-update-and-delete.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql · DML</span></div><pre class="code">SELECT * FROM author;  -- 1. preview current state
 
@@ -434,6 +463,7 @@ DELETE FROM author WHERE author_id IN ('A2', 'A3');</pre></div>
   <p class="eyebrow">Advanced Querying · transcript: subtitle (11).txt</p>
   <h2>Refining SELECT — LIKE · BETWEEN · IN</h2>
   <p class="lead">What if you don't know the exact value for the predicate? Three tools replace clumsy WHERE clauses: pattern matching, ranges, and value sets.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/11-like-between-in.ipynb" download>11-like-between-in.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/11-like-between-in.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- String pattern: % is the wildcard (0+ of any character)
 SELECT firstname FROM author WHERE firstname LIKE 'R%';   -- starts with R
@@ -457,6 +487,7 @@ SELECT * FROM author WHERE country IN ('CA', 'IN', 'CN');</pre></div>
   <p class="eyebrow">Advanced Querying · transcript: subtitle (12).txt</p>
   <h2>Sorting Result Sets — ORDER BY</h2>
   <p class="lead">Results come back in no particular order. ORDER BY sorts by one or more columns — ascending by default, DESC for descending, or by column position.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/12-order-by.ipynb" download>12-order-by.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/12-order-by.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT title FROM book ORDER BY title;        -- alphabetical (ASC default)
 SELECT title FROM book ORDER BY title DESC;   -- descending
@@ -477,6 +508,7 @@ SELECT title, pages FROM book ORDER BY 2;     -- sort by 2nd column in the list<
   <p class="eyebrow">Advanced Querying · transcript: subtitle (13).txt</p>
   <h2>Grouping — DISTINCT · GROUP BY · HAVING</h2>
   <p class="lead">The classic "how many X per Y?" build-up: kill duplicates with DISTINCT, count per group with GROUP BY, name derived columns with AS, filter groups with HAVING.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/13-group-by-having-as.ipynb" download>13-group-by-having-as.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/13-group-by-having-as.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code — progression on the author table</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">SELECT country FROM author ORDER BY 1;               -- 20 rows, duplicates
 SELECT DISTINCT country FROM author;                 -- 6 unique countries
@@ -502,6 +534,7 @@ HAVING COUNT(*) &gt; 4;                                 -- → China 6, India 6<
   <p class="eyebrow">Advanced Querying · transcript: subtitle (14).txt</p>
   <h2>Built-in Functions</h2>
   <p class="lead">Aggregate, scalar, and string functions run data operations <b>inside the database</b> — less data over the wire, often faster than fetching first. Examples use the PETRESCUE table.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/14-builtin-sql-functions.ipynb" download>14-builtin-sql-functions.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/14-builtin-sql-functions.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Aggregate functions</h3>
     <div class="codewrap"><div class="bar"><span>sql · petrescue</span></div><pre class="code">SELECT SUM(COST) FROM PETRESCUE;                     -- total of a column
 SELECT SUM(COST) AS SUM_OF_COST FROM PETRESCUE;      -- name the output column
@@ -528,6 +561,7 @@ SELECT DISTINCT(UPPERCASE(ANIMAL)) FROM PETRESCUE;   -- nested functions</pre></
   <p class="eyebrow">Advanced Querying · transcript: subtitle (15).txt</p>
   <h2>Date &amp; Time Functions</h2>
   <p class="lead">Special date/time types plus extraction functions and date arithmetic — directly in SQL. DATE = 8 digits (YYYYMMDD), TIME = 6 (HHMMSS), TIMESTAMP = 20 (with microseconds).</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/15-date-and-time-functions.ipynb" download>15-date-and-time-functions.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/15-date-and-time-functions.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql · db2 flavor</span></div><pre class="code">SELECT DAY(RESCUE_DATE) FROM PETRESCUE WHERE ANIMAL = 'Cat'; -- day portion
 SELECT COUNT(*) FROM PETRESCUE WHERE MONTH(RESCUE_DATE) = 5; -- May sales
@@ -550,6 +584,7 @@ SELECT CURRENT DATE - RESCUE_DATE FROM PETRESCUE;            -- elapsed since re
   <p class="eyebrow">Advanced Querying · transcript: subtitle (16).txt</p>
   <h2>Sub-Queries &amp; Nested SELECTs</h2>
   <p class="lead">Sub-selects are queries wrapped in parentheses and nested inside another query — powerful because they let you <b>evaluate aggregates where you normally can't</b>.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/16-sub-queries.ipynb" download>16-sub-queries.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/16-sub-queries.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Three placements</h3>
     <div class="codewrap"><div class="bar"><span>sql · employees</span></div><pre class="code">-- ① In the WHERE clause — the classic workaround:
 --    ❌ WHERE salary &gt; AVG(salary)  → "invalid use of aggregate function"
@@ -580,6 +615,7 @@ SELECT * FROM
   <p class="eyebrow">Advanced Querying · transcript: subtitle (17).txt</p>
   <h2>Multiple Tables — Sub-queries &amp; Implicit Joins</h2>
   <p class="lead">Ways to access more than one table in the same query: sub-queries across tables, and implicit joins (comma-separated FROM). Explicit JOINs come in lectures 18–20.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/17-working-with-multiple-tables.ipynb" download>17-working-with-multiple-tables.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/17-working-with-multiple-tables.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code — EMPLOYEES × DEPARTMENTS</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Sub-query: employees whose department exists / is in location L0002
 SELECT * FROM employees
@@ -611,6 +647,7 @@ WHERE  E.DEP_ID = D.DEP_ID_DEP;</pre></div>
   <p class="eyebrow">Multi-Table · transcript: subtitle12.txt</p>
   <h2>JOIN Overview</h2>
   <p class="lead">The JOIN operator combines rows from two or more tables based on a relationship between certain columns — usually a primary key in one table appearing as a foreign key in the other.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/18-join-overview.ipynb" download>18-join-overview.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/18-join-overview.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>How tables link</h3>
     <div class="tblwrap"><table>
       <tr><th>Key</th><th>Role in a join</th></tr>
@@ -633,6 +670,7 @@ WHERE  E.DEP_ID = D.DEP_ID_DEP;</pre></div>
   <p class="eyebrow">Multi-Table · transcript: subtitle15.txt</p>
   <h2>Inner Join</h2>
   <p class="lead">The most common join: only rows whose values <b>match in the common column</b> appear — non-matching rows are not displayed.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/19-inner-join.ipynb" download>19-inner-join.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/19-inner-join.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code — BORROWER ⟕ LOAN</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Who is borrowing books, and the loan date
 SELECT B.BORROWER_ID, B.LASTNAME, B.COUNTRY, L.BORROWER_ID, L.LOAN_DATE
@@ -653,6 +691,7 @@ INNER JOIN LOAN L                       -- right table
   <p class="eyebrow">Multi-Table · transcript: subtitle42.txt</p>
   <h2>Outer Joins — LEFT · RIGHT · FULL</h2>
   <p class="lead">Outer joins return all the matching rows of an inner join <b>plus</b> unmatched rows from one or both sides — filled with NULLs where data is missing.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/20-left-right-full-outer-join.ipynb" download>20-left-right-full-outer-join.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/20-left-right-full-outer-join.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- LEFT: all borrowers; Peters, Li, Wong show NULL loan data (never borrowed)
 SELECT B.BORROWER_ID, B.LASTNAME, B.COUNTRY, L.BORROWER_ID, L.LOAN_DATE
@@ -683,6 +722,7 @@ FULL OUTER JOIN LOAN L ON B.BORROWER_ID = L.BORROWER_ID;</pre></div>
   <p class="eyebrow">Python Access · transcript: subtitle (18).txt</p>
   <h2>Python &amp; Databases — Overview</h2>
   <p class="lead">Python connects to databases through APIs: the application builds SQL as text and hands it to the DBMS via API calls — connect → send → check status → fetch → disconnect.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/21-python-sql-apis-overview.ipynb" download>21-python-sql-apis-overview.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/21-python-sql-apis-overview.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>The SQL API flow</h3><ul>
     <li><span class="b">1.</span> API call(s) <b>connect</b> the program to the DBMS.</li>
     <li><span class="b">2.</span> Build the SQL statement as a <b>text string in a buffer</b>; an API call passes it to the DBMS.</li>
@@ -713,6 +753,7 @@ FULL OUTER JOIN LOAN L ON B.BORROWER_ID = L.BORROWER_ID;</pre></div>
   <p class="eyebrow">Python Access · transcript: subtitle (19).txt</p>
   <h2>DB-API — Connections &amp; Cursors</h2>
   <p class="lead">The Python DB-API is the standard that lets one program work with <b>any</b> relational database. Two main objects: the <b>Connection</b> (connect, commit, rollback, close) and the <b>Cursor</b> (run queries, scan results — like a file handle).</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/22-database-api-connections.ipynb" download>22-database-api-connections.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/22-database-api-connections.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>The canonical 5-step program</h3>
     <div class="codewrap"><div class="bar"><span>python</span></div><pre class="code"># 1. import the database module
 import ibm_db           # (or sqlite3, psycopg2, mysql.connector, ...)
@@ -746,6 +787,7 @@ conn.close()</pre></div>
   <p class="eyebrow">Python Access · transcript: subtitle (20).txt</p>
   <h2>SQL Magic in Jupyter</h2>
   <p class="lead">Magic commands are special notebook commands — not valid Python, but they change notebook behavior. Line magics (<span class="inline">%</span>) run one line; cell magics (<span class="inline">%%</span>) run whole cells, even in other languages.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/23-sql-magic.ipynb" download>23-sql-magic.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/23-sql-magic.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Set-up &amp; first query</h3>
     <div class="codewrap"><div class="bar"><span>jupyter</span></div><pre class="code">! pip install ipython-sql        # 1. install the dependency
 %load_ext sql                    # 2. load the SQL extension
@@ -770,6 +812,7 @@ SELECT * FROM employee</pre></div>
   <p class="eyebrow">Python Access · transcript: subtitle (22).txt</p>
   <h2>Real-World Datasets — Hints &amp; Tips</h2>
   <p class="lead">Real datasets arrive as CSVs (values separated by commas — sometimes semicolons). Loading them, quoting messy column names, splitting long queries, and the one habit that saves hours: LIMIT while exploring.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/24-real-world-csv-loading.ipynb" download>24-real-world-csv-loading.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/24-real-world-csv-loading.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql + python</span></div><pre class="code">-- Backticks for column names with spaces/special chars (MySQL)
 -- ⚠ single or double quotes DO NOT WORK for column names
@@ -803,6 +846,7 @@ df = pd.read_sql(query_statement, conn)
   <p class="eyebrow">Python Access · transcript: subtitle (23).txt</p>
   <h2>Table Metadata &amp; Catalogs</h2>
   <p class="lead">Which table is it — <span class="inline">dog</span>, <span class="inline">dogs</span>, or <span class="inline">four_legged_mammals</span>? Every database has catalog tables you can query for the list of tables and their properties.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/25-metadata-catalogs.ipynb" download>25-metadata-catalogs.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/25-metadata-catalogs.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Catalogs per system</h3>
     <div class="tblwrap"><table>
       <tr><th>System</th><th>Catalog</th></tr>
@@ -828,6 +872,7 @@ DESCRIBE table_name;                                  -- MySQL: table details</p
   <p class="eyebrow">Python Access · transcript: subtitle (21).txt</p>
   <h2>Analyzing Data with Python</h2>
   <p class="lead">The module-4 capstone: a real dataset (McDonald's menu nutrition, from Kaggle) into SQLite3, back through pandas, then EDA — describe(), swarmplot, jointplot, boxplot.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/26-eda-with-sql-and-pandas.ipynb" download>26-eda-with-sql-and-pandas.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/26-eda-with-sql-and-pandas.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>The pipeline</h3>
     <div class="codewrap"><div class="bar"><span>python</span></div><pre class="code">import pandas as pd, sqlite3, seaborn as sns
 
@@ -861,6 +906,7 @@ sns.boxplot(df['Sugars'])                            # middle 50% + outliers</pr
   <p class="eyebrow">Advanced Server · transcript: subtitle (26).txt</p>
   <h2>Views</h2>
   <p class="lead">An alternative way of representing data that exists in one or more base tables — a named results table you query like one. A view stores <b>only its definition</b>; it is dynamic, re-running its SELECT on every use.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/27-views.ipynb" download>27-views.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/27-views.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Syntax &amp; code</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">-- Omit sensitive columns (salary, birthdate)
 CREATE VIEW EMPINFO
@@ -894,6 +940,7 @@ DROP VIEW EMPINFO;        -- remove completely</pre></div>
   <p class="eyebrow">Advanced Server · transcript: subtitle (25).txt</p>
   <h2>Stored Procedures</h2>
   <p class="lead">A set of SQL statements stored and executed <b>on the database server</b> — the client sends one CALL instead of many statements. Parameters in, results out.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/28-stored-procedures.ipynb" download>28-stored-procedures.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/28-stored-procedures.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>Why</h3>
     <div class="chips"><span class="chip">↓ network traffic (1 call)</span><span class="chip">↑ performance (runs at the data)</span><span class="chip">code reuse</span><span class="chip">security (validate server-side)</span></div>
   </div>
@@ -929,6 +976,7 @@ CALL UPDATE_SAL('E5001', 1);       -- invoke from SQL or an application</pre></d
   <p class="eyebrow">Advanced Server · transcript: subtitle (24).txt</p>
   <h2>ACID Transactions</h2>
   <p class="lead">A transaction is an <b>indivisible unit of work</b>: every statement must complete successfully (a new stable state) — or none, leaving the database exactly as before. BEGIN → … → COMMIT or ROLLBACK.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Notebook</span><a href="sandbox/29-acid-transactions.ipynb" download>29-acid-transactions.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/29-acid-transactions.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
   <div class="block"><h3>The bank-purchase example — Rose buys $200 boots</h3>
     <div class="codewrap"><div class="bar"><span>sql</span></div><pre class="code">BEGIN;                                 -- implicit on Db2 on Cloud
 
@@ -961,6 +1009,7 @@ ROLLBACK;  -- any failed (insufficient funds) → undo all, back to before</pre>
   <p class="eyebrow">One page · everything at a glance</p>
   <h2>The Cheat Card</h2>
   <p class="lead">The highest-frequency syntax and habits from all 29 lectures, on one page.</p>
+  <div class="nb-bar"><span class="nb-tag">📓 Sandbox Overview</span><a href="sandbox/00-START-HERE.ipynb" download>00-START-HERE.ipynb</a><span class="nb-sep">·</span><a href="https://github.com/mohamed-soubhi/sql-data-science-cheatsheet/blob/main/sandbox/00-START-HERE.ipynb" target="_blank" rel="noopener">GitHub ↗</a></div>
 
   <div class="grid2">
     <div class="block"><h3>SELECT skeleton (evaluation order)</h3>
@@ -1032,7 +1081,7 @@ conn.commit(); conn.close()
   Science with Python”</i>. Distilled from my study notes taken on the
   course's video transcripts, rewritten and reorganized into 29 lecture tabs
   plus a one-page cheat card. Course examples are kept as used in the course;
-  raw transcripts are not included.</p>
+  raw transcripts are not included. Each tab includes a direct link to its companion runnable Jupyter notebook in the <code>sandbox/</code> directory.</p>
 </footer>
 
 <script>
