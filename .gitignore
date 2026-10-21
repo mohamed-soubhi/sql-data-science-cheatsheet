@@ -4,8 +4,11 @@ subtitle*.txt
 # Per-lecture markdown notes — kept local only
 lectures/
 
-# Study sandbox — kept local only
-sandbox/
+# Python & Jupyter cache
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+sandbox/*.html
 
 # Personal working files
 linkedin-post.md
